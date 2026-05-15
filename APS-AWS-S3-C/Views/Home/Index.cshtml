@@ -1,4 +1,54 @@
-﻿@{
+﻿@model List<S3FileDetais>
+
+
+    <form enctype="multipart/form-data" method="post" aps-controller="Home" asp-action="UploadfileToS3">
+   
+        <dl>
+        <dt style="margin-bottom:20px"> <label>Cargar archivos al Buken  con s3  </label> </dt>
+
+         <dd><input type="file" name="file" id="file" value="" /></dd>
+
+        </dl>
+        <input class="btn btn-success" type="submit" value="Subir un buken de S3"/>
+
+
+    </form>
+
+    <br />
+
+    <label> Archivos subidos al Buken   </label>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <td>Fecha</td>
+            <td>Nombre Archivos</td>
+        </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.FileDate</td>
+            <td>@item.FileName</td>
+
+            <td>
+                <a asp-action="ViewFileForDownload" asp-router-id="@item.id">Descargar</a>
+                <a asp-action="DeleteFile" asp-router-id="@item.id">Eliminar</a>
+            </td>
+        </tr>
+    }
+
+
+</table>
+
+
+
+
+
+
+
+
+
+
+@* @{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,3 +56,4 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+ *@
