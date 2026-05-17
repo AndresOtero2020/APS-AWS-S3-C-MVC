@@ -4,24 +4,25 @@
     <form enctype="multipart/form-data" method="post" aps-controller="Home" asp-action="UploadfileToS3">
    
         <dl>
-        <dt style="margin-bottom:20px"> <label>Cargar archivos al Buken  con s3  </label> </dt>
+        <dt style="margin-bottom:20px"> <label>Cargar archivos al Buckets con s3  </label> </dt>
 
          <dd><input type="file" name="file" id="file" value="" /></dd>
 
         </dl>
-        <input class="btn btn-success" type="submit" value="Subir un buken de S3"/>
+    <input class="btn btn-success" type="submit" value="Subir archivos en Buckets de S3" />
 
 
     </form>
 
     <br />
 
-    <label> Archivos subidos al Buken   </label>
+<label> Archivos subidos al Buckets   </label>
     <br />
     <table class="table table-bordered">
         <tr>
             <td>Fecha</td>
             <td>Nombre Archivos</td>
+            <td>Acciones </td>
         </tr>
     @foreach (var item in Model)
     {
@@ -30,11 +31,12 @@
             <td>@item.FileName</td>
 
             <td>
-                <a asp-action="ViewFileForDownload" asp-router-id="@item.id">Descargar</a>
-                <a asp-action="DeleteFile" asp-router-id="@item.id">Eliminar</a>
+                <a asp-action="ViewFileForDow" asp-route-id="@item.id" class="btn btn-warning">Descargar</a>
+                <a asp-action="DeleteFile" asp-route-id="@item.id" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>
     }
+
 
 
 </table>
@@ -49,11 +51,11 @@
 
 
 @* @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Buckets S3";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Buckets </h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">Buckets </a>.</p>
 </div>
  *@
