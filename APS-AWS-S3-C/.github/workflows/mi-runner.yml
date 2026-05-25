@@ -1,4 +1,4 @@
-name: Compilacion Ultra-Rapida en Mi PC Local
+name: Compilacion en la Nube de GitHub
 
 on:
   push:
@@ -6,29 +6,65 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    # Aquí hacemos la magia: le pedimos a GitHub una máquina virtual de ellos
+    runs-on: ubuntu-latest
 
     steps:
-    # 1. Descargar el código fuente
+    # 1. Descargar el código fuente en la máquina de GitHub
     - name: Descargando codigo fuente
       uses: actions/checkout@v4
 
-    # 2. Configurar la caché de NuGet para máxima velocidad local
-    - name: Configurar Cache de paquetes NuGet
-      uses: actions/cache@v4
+    # 2. Instalar el entorno de .NET en la máquina virtual de GitHub
+    - name: Configurar entorno .NET Core
+      uses: actions/setup-dotnet@v4
       with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+        dotnet-version: '8.0.x' # Ajusta a la versión de tu proyecto (6.0, 7.0, 8.0, etc.)
 
-    # 3. Restaurar paquetes usando la caché local
+    # 3. Restaurar paquetes NuGet en la nube
     - name: Restaurando paquetes NuGet
       run: dotnet restore APS-AWS-S3-C/APS-AWS-S3-C.csproj
 
-    # 4. Compilación ultra rápida (aprovechando tu hardware)
+    # 4. Compilar el proyecto en los servidores de GitHub
     - name: Compilando Proyecto MVC
-      run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release --no-restore
+      run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release
+
+#-------------------------------------------------------------------
+
+# name: Compilacion Ultra-Rapida en Mi PC Local
+
+# on:
+#   push:
+#     branches: [ "master" ]
+
+# jobs:
+#   build:
+#     runs-on: self-hosted
+
+#     steps:
+#     # 1. Descargar el código fuente
+#     - name: Descargando codigo fuente
+#       uses: actions/checkout@v4
+
+#     # 2. Configurar la caché de NuGet para máxima velocidad local
+#     - name: Configurar Cache de paquetes NuGet
+#       uses: actions/cache@v4
+#       with:
+#         path: ~/.nuget/packages
+#         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+#         restore-keys: |
+#           ${{ runner.os }}-nuget-
+
+#     # 3. Restaurar paquetes usando la caché local
+#     - name: Restaurando paquetes NuGet
+#       run: dotnet restore APS-AWS-S3-C/APS-AWS-S3-C.csproj
+
+#     # 4. Compilación ultra rápida (aprovechando tu hardware)
+#     - name: Compilando Proyecto MVC
+#       run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release --no-restore
+
+
+#-----------------------------------------------------------------------------------------
+
 
 # name: Compilacion en Mi PC Local
 
