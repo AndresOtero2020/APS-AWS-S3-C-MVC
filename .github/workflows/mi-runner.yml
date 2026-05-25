@@ -1,0 +1,19 @@
+name: Compilacion en Mi PC Local
+
+on:
+  push:
+    branches: [ "master", "main" ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Descargando codigo fuente
+      uses: actions/checkout@v4
+
+    - name: Restaurando paquetes NuGet
+      run: dotnet restore APS-AWS-S3-C/APS-AWS-S3-C.csproj
+
+    - name: Compilando Proyecto MVC
+      run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release --no-restore
