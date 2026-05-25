@@ -79,9 +79,10 @@ namespace APS_AWS_S3_C.Controllers
 
 				}
 
+
 			}
-            // hacemos el llamado al model de s3
-            S3FileDetais fileDetais =new S3FileDetais();
+			// hacemos el llamado al model de s3
+			S3FileDetais fileDetais =new S3FileDetais();
             fileDetais.FileName=file.FileName;
             /// almacenamos la fecha 
             fileDetais.FileDate = DateTime.Today;
@@ -91,11 +92,11 @@ namespace APS_AWS_S3_C.Controllers
             //Los guardamos 
             _db.SaveChanges();
 
-            //Mostramos el mensaje
-            ViewBag.Success = "Archivo subido con éxito on S3 Bukent";
+			//Mostramos el mensaje
+			ViewBag.Success = "Archivo subido con éxito on S3 Bukent";
 
-            //hacemos el return
-            return RedirectToAction(nameof(Index));
+			//hacemos el return
+			return RedirectToAction(nameof(Index));
 
 			//return "Archivo subido";
 			//return Ok(new { mensaje = "Archivo subido con éxito", nombre = file.FileName });
@@ -149,10 +150,8 @@ namespace APS_AWS_S3_C.Controllers
 				{
 					_db.s3FileDetais.Remove(fileDetais);
 					await _db.SaveChangesAsync(); // Es mejor usar el SaveChanges asíncrono
+					ViewBag.Success = "Archivo Eliminado con éxito en S3 Bucket";
 				}
-
-				TempData["Success"] = "Archivo Eliminado con éxito en S3 Bucket";
-				ViewBag.Success = "Archivo Eliminado con éxito en S3 Bucket";
 
 				return RedirectToAction(nameof(Index));
 			}
@@ -269,6 +268,7 @@ namespace APS_AWS_S3_C.Controllers
 				{
 					return NotFound();
 				}
+				ViewBag.Success = "Archivo descargado con éxito en S3 Bucket";
 				return File(response.ResponseStream, response.Headers.ContentType, FileName);
 
 			
