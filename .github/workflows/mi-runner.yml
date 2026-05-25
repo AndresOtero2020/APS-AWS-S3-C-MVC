@@ -1,0 +1,70 @@
+﻿name: Compilacion en Mi PC Local
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    # Esto obliga a GitHub a buscar a ANDR3S_OTERO y no usar los servidores de la nube
+    runs-on: self-hosted
+
+    steps:
+    - name: Descargando codigo fuente
+      uses: actions/checkout@v4
+
+    - name: Restaurando paquetes NuGet
+      run: dotnet restore APS-AWS-S3-C/APS-AWS-S3-C.csproj
+
+    - name: Compilando Proyecto MVC
+      run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release --no-restore
+
+
+# name: .NET Core MVC CI (Self-Hosted)
+
+# on:
+#   push:
+#     branches: [ "master" ]
+#   pull_request:
+#     branches: [ "master" ]
+
+# jobs:
+#   build:
+#     # 🔴 AQUÍ ESTÁ EL TRUCO: Forzamos a usar tu máquina "ANDR3S_OTERO"
+#     runs-on: self-hosted
+
+#     steps:
+#     # 1. Descargar el código en tu PC
+#     - name: Checkout del código
+#       uses: actions/checkout@v4
+
+#     # 2. Restaurar dependencias de .NET
+#     - name: Restaurar paquetes NuGet
+#       run: dotnet restore
+
+#     # 3. Compilar el proyecto en modo Release
+#     - name: Compilar proyecto
+#       run: dotnet build --configuration Release --no-restore
+
+
+# name: .NET Core MVC CI
+
+# on:
+#   push:
+#     branches: [ "master" ]
+#   pull_request:
+#     branches: [ "master" ]
+
+# jobs:
+#   build:
+#     runs-on: self-hosted
+
+#     steps:
+#     - name: Checkout del código
+#       uses: actions/checkout@v4
+
+#     - name: Restaurar paquetes NuGet
+#       run: dotnet restore APS-AWS-S3-C/APS-AWS-S3-C.csproj
+
+#     - name: Compilar proyecto
+#       run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release --no-restore
