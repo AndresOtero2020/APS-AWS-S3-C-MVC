@@ -1,3 +1,32 @@
+
+# name: Compilacion en la Nube de GitHub
+
+# on:
+#   push:
+#     branches: [ "master" ]
+
+# jobs:
+#   build:
+#     # Esta línea le ordena a GitHub usar sus servidores en vez de tu PC
+#     runs-on: windows-latest
+
+#     steps:
+#     - name: Descargando codigo fuente
+#       uses: actions/checkout@v4
+
+#     - name: Configurar entorno .NET Core
+#       uses: actions/setup-dotnet@v4
+#       with:
+#         dotnet-version: '8.0.x'
+
+#     - name: Restaurando paquetes NuGet
+#       run: dotnet restore APS-AWS-S3-C/APS-AWS-S3-C.csproj
+
+#     - name: Compilando Proyecto MVC
+#       run: dotnet build APS-AWS-S3-C/APS-AWS-S3-C.csproj --configuration Release
+
+#-----------------------------------------------------------------------------
+
 name: Compilacion en la Nube de GitHub
 
 on:
@@ -7,7 +36,7 @@ on:
 jobs:
   build:
     # Aquí hacemos la magia: le pedimos a GitHub una máquina virtual de ellos
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     # 1. Descargar el código fuente en la máquina de GitHub
