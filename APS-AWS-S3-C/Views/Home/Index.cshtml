@@ -1,61 +1,619 @@
 ﻿@model List<S3FileDetais>
 
-
-    <form enctype="multipart/form-data" method="post" aps-controller="Home" asp-action="UploadfileToS3">
-   
-        <dl>
-        <dt style="margin-bottom:20px"> <label>Cargar archivos al Buckets con s3  </label> </dt>
-
-         <dd><input type="file" name="file" id="file" value="" /></dd>
-
-        </dl>
-    <input class="btn btn-success" type="submit" value="Subir archivos en Buckets de S3" />
-
-
-    </form>
-
-    <br />
-
-<label> Archivos subidos al Buckets   </label>
-    <br />
-    <table class="table table-bordered">
-        <tr>
-            <td>Fecha</td>
-            <td>Nombre Archivos</td>
-            <td>Acciones </td>
-        </tr>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.FileDate</td>
-            <td>@item.FileName</td>
-
-            <td>
-                <a asp-action="ViewFileForDow" asp-route-id="@item.id" class="btn btn-warning">Descargar</a>
-                <a asp-action="DeleteFile" asp-route-id="@item.id" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-    }
-
-
-
-</table>
-
-
-
-
-
-
-
-
-
-
-@* @{
-    ViewData["Title"] = "Buckets S3";
+@{
+    ViewData["Title"] = "AWS S3";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Buckets </h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">Buckets </a>.</p>
+<style>
+
+    /* ===== TIPOGRAFIA ===== */
+    @@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+
+    body {
+        margin: 0;
+        font-family: 'Cormorant Garamond', serif;
+        transition: 0.3s;
+        background-color: dimgray;
+    }
+
+    /* ===== NAVBAR SUPERIOR ===== */
+
+    .navbar,
+    .navbar-light,
+    .bg-white,
+    .border-bottom {
+        background: #6b7280 !important;
+        border-color: #6b7280 !important;
+    }
+
+        .navbar a,
+        .navbar-brand,
+        .nav-link {
+            color: white !important;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+        }
+
+            .navbar a:hover,
+            .nav-link:hover {
+                color: #e5e7eb !important;
+                transform: scale(1.03);
+                transition: 0.3s;
+            }
+
+
+    /* ===== CONTENEDOR ===== */
+
+    .container-box {
+        width: 90%;
+        margin: 40px auto;
+    }
+
+    .card-box {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+        background: white;
+    }
+
+    .dark-mode .card-box {
+        background: #1e1e1e;
+    }
+
+    /* ===== HEADER ===== */
+
+    .header-box {
+        background: linear-gradient( 135deg, #374151 0%, #4b5563 35%, #6b7280 70%, #9ca3af 100% );
+        color: white;
+        padding: 35px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .header-box h1 {
+            margin: 0;
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-box p {
+            font-size: 20px;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+
+    /* ===== BODY ===== */
+
+    .content-box {
+        padding: 35px;
+        background-color: rgba(0,0,0,0.2);
+       
+    }
+
+    .upload-box {
+        border: 2px dashed #999;
+        border-radius: 15px;
+        padding: 35px;
+        text-align: center;
+    }
+
+        .upload-box h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+    /* ===== INPUT FILE ===== */
+
+    .file-upload-wrapper {
+        margin-top: 20px;
+    }
+
+    .custom-file-input {
+        display: none;
+    }
+
+    .custom-file-label {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid #444;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    /* ===== MODO CLARO ===== */
+
+    .light-mode .custom-file-label {
+        background: #f8fafc;
+        border: 1px solid #d1d5db;
+    }
+
+    .light-mode .file-btn {
+        background: #9ca3af;
+        color: white;
+    }
+
+    .light-mode .file-text {
+        color: #111827;
+    }
+
+    .light-mode .custom-file-label:hover .file-btn {
+        background: #6b7280;
+    }
+
+    /* ===== MODO OSCURO ===== */
+
+    .dark-mode .custom-file-label {
+        background: #1f1f1f;
+        border: 1px solid #444;
+    }
+
+    .dark-mode .file-btn {
+        background: #9ca3af;
+        color: white;
+    }
+
+    .dark-mode .file-text {
+        color: white;
+    }
+
+    .dark-mode .custom-file-label:hover .file-btn {
+        background: #6b7280;
+    }
+
+    /* ===== BOTON INPUT ===== */
+
+    .file-btn {
+        padding: 14px 22px;
+        font-size: 18px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: 0.3s;
+    }
+
+    .file-text {
+        padding: 14px 18px;
+        flex: 1;
+        font-size: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .custom-file-label:hover {
+        transform: scale(1.02);
+    }
+
+    /* ===== BOTON SUBIR ===== */
+
+    .upload-btn {
+        margin-top: 25px;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 30px;
+        background: #10b981;
+        color: white;
+        cursor: pointer;
+        font-size: 22px;
+        font-weight: 600;
+        font-family: 'Cormorant Garamond', serif;
+        transition: 0.3s;
+    }
+
+        .upload-btn:hover {
+            background: #059669;
+            transform: scale(1.08);
+        }
+
+    /* ===== TABLA ===== */
+
+    .table-responsive {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 35px;
+        min-width: 700px;
+    }
+
+        table thead {
+            background: #4b5563;
+            color: white;
+        }
+
+        table th {
+            padding: 18px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 18px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 20px;
+        }
+
+    .dark-mode table th,
+    .dark-mode table td {
+        border: 1px solid #444;
+    }
+
+    .dark-mode table thead {
+        background: #374151;
+    }
+
+    /* ===== BOTONES ===== */
+
+    .btn-download {
+        background: #facc15;
+        color: black;
+        padding: 10px 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        margin-right: 8px;
+        font-size: 20px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: inline-block;
+    }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        padding: 10px 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: inline-block;
+    }
+
+    /* ===== HOVER BOTONES ===== */
+
+    .btn-download:hover {
+        background: #eab308;
+        transform: scale(1.10);
+        box-shadow: 0px 4px 12px rgba(234,179,8,0.4);
+    }
+
+    .btn-delete:hover {
+        background: #dc2626;
+        transform: scale(1.10);
+        box-shadow: 0px 4px 12px rgba(220,38,38,0.4);
+    }
+
+    /* ===== TITULO TABLA ===== */
+
+    .table-title {
+        margin-top: 40px;
+        font-size: 34px;
+        font-weight: 700;
+    }
+
+    /* ===== RESPONSIVE ===== */
+
+    @@media(max-width:992px) {
+
+        .container-box {
+            width: 95%;
+        }
+
+        .header-box h1 {
+            font-size: 32px;
+        }
+
+        .header-box p {
+            font-size: 18px;
+        }
+
+        .table-title {
+            font-size: 28px;
+        }
+
+        table th,
+        table td {
+            font-size: 18px;
+            padding: 14px;
+            text-align:center;
+        }
+
+        .btn-download,
+        .btn-delete {
+            font-size: 18px;
+            padding: 8px 16px;
+        }
+    }
+
+    @@media(max-width:768px) {
+
+        .container-box {
+            width: 100%;
+            margin: 15px auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .content-box {
+            padding: 20px;
+        }
+
+        .upload-box {
+            padding: 25px 15px;
+        }
+
+        .header-box {
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+            .header-box h1 {
+                font-size: 26px;
+            }
+
+            .header-box p {
+                font-size: 16px;
+            }
+
+        .theme-btn {
+            position: static;
+            margin-bottom: 20px;
+        }
+
+        .custom-file-label {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .file-btn {
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .file-text {
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .upload-btn {
+            width: 100%;
+            font-size: 20px;
+        }
+
+        .btn-download,
+        .btn-delete {
+            display: block;
+            margin: 8px auto;
+            width: 90%;
+        }
+    }
+
+    @@media(max-width:480px) {
+
+        .header-box h1 {
+            font-size: 22px;
+        }
+
+        .header-box p {
+            font-size: 15px;
+        }
+
+        .upload-box h2 {
+            font-size: 24px;
+        }
+
+        .table-title {
+            font-size: 24px;
+        }
+
+        .theme-btn {
+            width: 100%;
+            font-size: 18px;
+        }
+
+        .btn-download,
+        .btn-delete {
+            font-size: 16px;
+        }
+    }
+
+</style>
+
+<div class="container-box">
+
+    <div class="card-box">
+
+        <!-- HEADER -->
+       <div style="text-align:center;" class="header-box">
+
+            <h1>☁️ AWS S3 Storage</h1>
+
+            <p>
+                Sistema de gestión de archivos en Bucket S3
+            </p>
+
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content-box">
+
+            <!-- FORMULARIO -->
+            <form enctype="multipart/form-data"
+                  method="post"
+                  asp-controller="Home"
+                  asp-action="UploadfileToS3">
+
+                <div class="upload-box">
+
+                    <h2>📁 Seleccionar Archivo</h2>
+
+                    <div class="file-upload-wrapper">
+
+                        <input type="file"
+                               name="file"
+                               id="file"
+                               class="custom-file-input"
+                               onchange="updateFileName(this)" />
+
+                        <label for="file" class="custom-file-label">
+
+                            <span class="file-btn">
+                                📁 Seleccionar archivo
+                            </span>
+
+                            <span class="file-text" id="fileName">
+                                Ningún archivo seleccionado
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                    <button type="submit"
+                            class="upload-btn">
+
+                        ⬆️ Subir Archivo
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <div class="table-responsive">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>📅 Fecha</th>
+                            <th>📄 Archivo</th>
+                            <th>⚙️ Acciones</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>@item.FileDate</td>
+
+                                    <td>@item.FileName</td>
+
+                                    <td>
+
+                                        <a asp-action="ViewFileForDow"
+                                           asp-route-id="@item.id"
+                                           class="btn-download">
+
+                                            Descargar ⬇️
+
+                                        </a>
+
+                                        <a asp-action="DeleteFile"
+                                           asp-route-id="@item.id"
+                                           class="btn-delete">
+
+                                            Eliminar 🗑️
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+
+                                <td colspan="3">
+                                    No hay archivos subidos
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
- *@
+
+<script>
+
+    // AGREGAR ICONO A LA NAVBAR EXISTENTE
+    window.onload = function () {
+
+        const brand = document.querySelector(".navbar-brand");
+
+        if (brand && !brand.innerHTML.includes("☁️")) {
+
+            brand.innerHTML = "☁️ " + brand.innerHTML;
+        }
+    };
+
+    // INICIAR EN MODO CLARO
+    document.body.classList.add("light-mode");
+
+    // CAMBIO DE TEMA
+    function toggleTheme() {
+
+        const body = document.body;
+        const btn = document.getElementById("themeBtn");
+
+        if (body.classList.contains("light-mode")) {
+
+            body.classList.remove("light-mode");
+            body.classList.add("dark-mode");
+
+            btn.innerHTML = "☀️ Claro";
+
+        }
+        else {
+
+            body.classList.remove("dark-mode");
+            body.classList.add("light-mode");
+
+            btn.innerHTML = "🌙 Oscuro";
+
+        }
+    }
+
+    // CAMBIAR NOMBRE DEL ARCHIVO
+    function updateFileName(input){
+
+        const fileName = input.files.length > 0
+            ? input.files[0].name
+            : "Ningún archivo seleccionado";
+
+        document.getElementById("fileName").innerText = fileName;
+    }
+
+</script>

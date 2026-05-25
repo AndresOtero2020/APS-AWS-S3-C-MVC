@@ -39,6 +39,7 @@ namespace APS_AWS_S3_C.Controllers
             // Lo que mostraremos en la lista.
             return View(files);
         }
+
 	//  (CARGAR ARCHIVOS)
         [HttpPost]
         public async Task<IActionResult> UploadfileToS3(IFormFile file)
@@ -53,7 +54,9 @@ namespace APS_AWS_S3_C.Controllers
 			// Usamos el cliente de Amazon
 			using ( var amazonS3client= new AmazonS3Client(
                 // Se coloca la claves de S3
+				//clave de acceso
                 "AKIAXIRJEVYXVJRCZ74Y",
+				//Clave de acceso secreta 
                 "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",
                 /// Colocamos la region del AWS 
 				Amazon.RegionEndpoint.USEast2
@@ -126,8 +129,8 @@ namespace APS_AWS_S3_C.Controllers
 			}
 			//Credenciales
 			using (var amazonS3client = new AmazonS3Client(
-				"AKIAXIRJEVYXVJRCZ74Y",
-				"IMRwyRzo4b0cVudWjW6X+eyx12KtQkiyQFvAFt87",
+                "AKIAXIRJEVYXVJRCZ74Y",
+                "IMRwyRzo4b0cVudWjW6X+eyx12KtQkiyQFvAFt87",
 				Amazon.RegionEndpoint.USEast2
 			))
 			{
@@ -156,7 +159,6 @@ namespace APS_AWS_S3_C.Controllers
 		}
 
 		/*
-
 				public IActionResult DeleteFile(Int32 id)
 				{ 
 					S3FileDetais details = new S3FileDetais();
@@ -272,17 +274,6 @@ namespace APS_AWS_S3_C.Controllers
 			
 			}
 		}
-
-
-
-
-
-
-
-
-
-
-
 
 
 		public IActionResult Privacy()

@@ -1,10 +1,219 @@
 ﻿@{
-    ViewData["Title"] = "INTEGRANTES";
+    ViewData["Title"] = "Integrantes";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
-<p>Use this page to detail your site's privacy policy.</p>
-<p>Use this page to detail your site's privacy policy.</p>
-<p>Use this page to detail your site's privacy policy.</p>
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+
+    @@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+    /* ===== MODOS ===== */
+    .light-mode {
+        background: #f4f7fb;
+        color: #111;
+    }
+
+    .dark-mode {
+        background: #121212;
+        color: white;
+    }
+
+    /* ===== BODY ===== */
+    body {
+        margin: 0;
+        font-family: 'Cormorant Garamond', serif;
+        transition: 0.3s;
+        background-color: dimgray;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar,
+    .navbar-light,
+    .bg-white,
+    .border-bottom {
+        background: #6b7280 !important;
+        border-color: #6b7280 !important;
+    }
+
+        .navbar a,
+        .navbar-brand,
+        .nav-link {
+            color: white !important;
+            font-size: 24px;
+        }
+
+    /* ===== CONTENEDOR ===== */
+    .container-box {
+        width: 90%;
+        margin: 40px auto;
+    }
+
+    /* ===== CARD ===== */
+    .card-box {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
+        background: white;
+    }
+
+    .dark-mode .card-box {
+        background: #1e1e1e;
+    }
+
+    /* ===== HEADER ===== */
+    .header-box {
+        background: linear-gradient( 135deg, #374151 0%, #4b5563 35%, #6b7280 70%, #9ca3af 100% );
+        color: white;
+        padding: 35px;
+        text-align: center;
+        position: relative;
+    }
+
+        .header-box h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        .header-box p {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+    /* ===== BODY ===== */
+    .content-box {
+        padding: 35px;
+        background-color: rgba(0,0,0,0.2);
+    }
+
+    /* ===== TITULO ===== */
+    .team-title {
+        text-align: center;
+        font-size: 34px;
+        margin-bottom: 30px;
+        color: #374151;
+    }
+
+    /* ===== GRID ===== */
+    .members-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    /* ===== CARDS ===== */
+    .member-card {
+        background: linear-gradient( 135deg, #374151 0%);
+        border-radius: 18px;
+        padding: 30px;
+        text-align: center;
+        border: 1px solid #d1d5db;
+        transition: 0.3s;
+    }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.15);
+        }
+
+    .dark-mode .member-card {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .member-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+    }
+
+    .member-name {
+        font-size: 26px;
+        font-weight: 600;
+        color: #e5e7eb;
+    }
+
+    .dark-mode .member-name {
+        color: #e5e7eb;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @@media(max-width:768px) {
+
+        .members-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .header-box h1 {
+            font-size: 28px;
+        }
+
+        .header-box p {
+            font-size: 16px;
+        }
+
+        .team-title {
+            font-size: 26px;
+        }
+
+        .content-box {
+            padding: 20px;
+        }
+    }
+
+</style>
+
+<div class="container-box">
+
+    <div class="card-box">
+
+        <!-- HEADER -->
+        <div class="header-box">
+
+            <h1>👥 Integrantes</h1>
+            <p>Equipo del proyecto AWS S3</p>
+
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content-box">
+
+            <div class="members-grid">
+
+                <div class="member-card">
+                    <div class="member-icon">👩‍💻</div>
+                    <div class="member-name">Esmeralda Melani Martínez Chicas</div>
+                </div>
+
+                <div class="member-card">
+                    <div class="member-icon">👩‍💻</div>
+                    <div class="member-name">Vanessa Damary Pérez Gómez</div>
+                </div>
+
+                <div class="member-card">
+                    <div class="member-icon">👨‍💻</div>
+                    <div class="member-name">Omar Andrés Juarez Otero.</div>
+                </div>
+
+                <div class="member-card">
+                    <div class="member-icon">👨‍💻</div>
+                    <div class="member-name">José Enmanuel Mejia Henriquez</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+     // AGREGAR ICONO A LA NAVBAR EXISTENTE
+    window.onload = function () {
+
+        const brand = document.querySelector(".navbar-brand");
+
+        if (brand && !brand.innerHTML.includes("☁️")) {
+
+            brand.innerHTML = "☁️ " + brand.innerHTML;
+        }
+    };
+
+</script>
